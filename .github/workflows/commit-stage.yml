@@ -1,0 +1,47 @@
+name: Commit Stage Pull Request Workflow
+
+on: 
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  checks: write
+
+jobs:
+  commit-stage:
+    name: Commit Stage Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout out pr branch
+        uses: actions/checkout@v3
+        with:
+          path: revision
+      - name: Check out main branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          path: base
+      - name: View working folder
+        run:  tree      
+      - name: Structured diff of what has changed
+        uses: Tufin/oasdiff-action@v2
+        with:
+          base: 'base/output/api-definitions/product-catalog.oas.yaml'
+          revision: 'revision/output/api-definitions/product-catalog.oas.yaml'
+          format: 'yaml'
+      - name: Breaking change check
+        uses: Tufin/oasdiff-action@v2
+        with:
+          base: 'base/output/api-definitions/product-catalog.oas.yaml'
+          revision: 'revision/output/api-definitions/product-catalog.oas.yaml'
+          format: 'yaml'
+          breaking-only: true
+          fail-on-diff: true
+      - name: Editorial checks
+        run:  revision/editorial-checks.sh
+      - name: Lint API definitions
+        uses: stoplightio/spectral-action@latest
+        with:
+          file_glob: 'revision/api-definitions/**/*.oas.yaml'
+          spectral_ruleset: 'revision/.spectral.yaml'
