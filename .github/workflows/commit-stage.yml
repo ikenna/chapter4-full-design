@@ -23,7 +23,7 @@ jobs:
           ref: main
           path: base
       - name: View working folder
-        run:  tree      
+        run:  tree -a -I '.git'      
       - name: Structured diff of what has changed
         uses: Tufin/oasdiff-action@v2
         with:
