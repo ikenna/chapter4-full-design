@@ -30,6 +30,8 @@ jobs:
           base: 'base/api-definitions/product-catalog.oas.yaml'
           revision: 'revision/api-definitions/product-catalog.oas.yaml'
           format: 'yaml'
+      - name: Install Spectral OWASP ruleset 
+        run:  npm install --save-dev @stoplight/spectral-owasp-ruleset      
       - name: Lint API definitions
         uses: stoplightio/spectral-action@latest
         with:
