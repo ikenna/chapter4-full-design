@@ -30,8 +30,6 @@ jobs:
           base: 'base/api-definitions/product-catalog.oas.yaml'
           revision: 'revision/api-definitions/product-catalog.oas.yaml'
           format: 'yaml'
-      - name: Editorial checks
-        run:  revision/editorial-checks.sh
       - name: Lint API definitions
         uses: stoplightio/spectral-action@latest
         with:
