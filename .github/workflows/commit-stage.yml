@@ -30,6 +30,13 @@ jobs:
           base: 'base/api-definitions/product-catalog.oas.yaml'
           revision: 'revision/api-definitions/product-catalog.oas.yaml'
           format: 'yaml'
+      - name: Editorial checks
+        run:  revision/editorial-checks.sh
+      - name: Lint API definitions
+        uses: stoplightio/spectral-action@latest
+        with:
+          file_glob: 'revision/api-definitions/**/*.oas.yaml'
+          spectral_ruleset: 'revision/.spectral.yaml'
       - name: Breaking change check
         uses: Tufin/oasdiff-action@v2
         with:
@@ -38,10 +45,4 @@ jobs:
           format: 'yaml'
           breaking-only: true
           fail-on-diff: true
-      - name: Editorial checks
-        run:  revision/editorial-checks.sh
-      - name: Lint API definitions
-        uses: stoplightio/spectral-action@latest
-        with:
-          file_glob: 'revision/api-definitions/**/*.oas.yaml'
-          spectral_ruleset: 'revision/.spectral.yaml'
+      
